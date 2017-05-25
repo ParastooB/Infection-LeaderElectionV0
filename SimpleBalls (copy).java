@@ -5,10 +5,6 @@ import java.awt.*;
 
 public class SimpleBalls {
 
-	// Agent count
-	public static final int AGENT_COUNT = 50;
-	public static final int FrameSize = 1024;
-
     public static void main(String[] args) {
         new SimpleBalls();
     }
@@ -30,7 +26,7 @@ public class SimpleBalls {
                 frame.setLayout(new BorderLayout());
                 Balls balls = new Balls();
                 frame.add(balls);
-                frame.setSize(FrameSize, FrameSize);
+                frame.setSize(400, 400);
                 frame.setVisible(true);
 
                 new Thread(new BounceEngine(balls)).start();
@@ -44,44 +40,15 @@ public class SimpleBalls {
     }
 
     public class Balls extends JPanel {
+	public static final int AGENT_COUNT = 5;
 
         private List<Ball> ballsUp;
 
         public Balls() {
             ballsUp = new ArrayList<Ball>(AGENT_COUNT);
 
-			int infected = random(AGENT_COUNT);
-			int m = Math.min(FrameSize/2, FrameSize/2);
-			int r = 4 * m / 5;
-			int r2 = Math.abs(m - r) / 2;
-			Color myRed = new Color(200,0,0);
-			Color myGreen = new Color(0,200,0);
-
-            for (int index = 0; index < AGENT_COUNT ; index++) {
-
-				// set the colour 
-				Ball ballNew = new Ball(new Color(5,80,120));
-				if (index == infected)
-					ballNew.setColor(myRed); 
-				else
-		        	ballNew.setColor(myGreen); 
-
-		        // set the starting position...
-				double t = 2 * Math.PI * index / AGENT_COUNT;
-				int x = (int) Math.round(FrameSize/2 + r * Math.cos(t));
-				int y = (int) Math.round(FrameSize/2 + r * Math.sin(t));
-
-		        Dimension size = ballNew.getSize();
-
-		        if (x + size.width > FrameSize) {
-		        	x = FrameSize - size.width;
-		        }
-		        if (y + size.height > FrameSize) {
-		        	y = FrameSize - size.height;
-		        }
-
-				ballNew.setLocation(new Point(x, y));
-				ballsUp.add(ballNew);
+            for (int index = 0; index < 10 + random(90); index++) {
+                ballsUp.add(new Ball(new Color(0,128,0)));
             }
         }
 
@@ -115,8 +82,23 @@ public class SimpleBalls {
             int width = getParent().getWidth();
             int height = getParent().getHeight();
 
-			//parent(random(AGENT_COUNT))
+            // Randomize the starting position...
+            for (Ball ball : getParent().getBalls()) {
+                int x = random(width);
+                int y = random(height);
 
+                Dimension size = ball.getSize();
+
+                if (x + size.width > width) {
+                    x = width - size.width;
+                }
+                if (y + size.height > height) {
+                    y = height - size.height;
+                }
+
+                ball.setLocation(new Point(x, y));
+
+            }
 
             while (getParent().isVisible()) {
 
@@ -128,11 +110,15 @@ public class SimpleBalls {
                     }
                 });
 
-                    getParent().getBalls().get(random(AGENT_COUNT-1)).setColor(new Color(0,random(255),random(255))); 
+                // This is a little dangrous, as it's possible
+                // for a repaint to occur while we're updating...
+                for (Ball ball : getParent().getBalls()) {
+                    move(ball);
+                }
 
                 // Some small delay...
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(500);
                 } catch (InterruptedException ex) {
                 }
 
@@ -143,6 +129,32 @@ public class SimpleBalls {
         public Balls getParent() {
             return parent;
         }
+
+        public void move(Ball ball) {
+
+            Point p = ball.getLocation();
+            Point speed = ball.getSpeed();
+            Dimension size = ball.getSize();
+
+            int vx = speed.x;
+            int vy = speed.y;
+
+            int x = p.x;
+            int y = p.y;
+
+            if (x + vx < 0 || x + size.width + vx > getParent().getWidth()) {
+                vx *= -1;
+            }
+            if (y + vy < 0 || y + size.height + vy > getParent().getHeight()) {
+                vy *= -1;
+            }
+            x += vx;
+            y += vy;
+
+            ball.setSpeed(new Point(vx, vy));
+            ball.setLocation(new Point(x, y));
+
+        }
     }
 
     public class Ball {
@@ -150,10 +162,13 @@ public class SimpleBalls {
         private Color color;
         private Point location;
         private Dimension size;
+        private Point speed;
 
         public Ball(Color color) {
 
             setColor(color);
+
+            speed = new Point(10 - random(20), 10 - random(20));
             size = new Dimension(30, 30);
 
         }
@@ -178,6 +193,13 @@ public class SimpleBalls {
             return location;
         }
 
+        public Point getSpeed() {
+            return speed;
+        }
+
+        public void setSpeed(Point speed) {
+            this.speed = speed;
+        }
 
         protected void paint(Graphics2D g2d) {
 
