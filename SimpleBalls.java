@@ -6,8 +6,14 @@ import java.awt.*;
 public class SimpleBalls {
 
 	// Agent count
-	public static final int AGENT_COUNT = 50;
+	public static final int AGENT_COUNT = 200;
 	public static final int FrameSize = 1024;
+	Color myRed = new Color(200,0,0);
+	Color myGreen = new Color(0,200,0);
+	public int infectedCount = 0;
+	long startTime = System.currentTimeMillis();
+	public int rounds = 0;
+	public int failed = 0;
 
     public static void main(String[] args) {
         new SimpleBalls();
@@ -54,15 +60,15 @@ public class SimpleBalls {
 			int m = Math.min(FrameSize/2, FrameSize/2);
 			int r = 4 * m / 5;
 			int r2 = Math.abs(m - r) / 2;
-			Color myRed = new Color(200,0,0);
-			Color myGreen = new Color(0,200,0);
 
             for (int index = 0; index < AGENT_COUNT ; index++) {
 
 				// set the colour 
 				Ball ballNew = new Ball(new Color(5,80,120));
-				if (index == infected)
+				if (index == infected){
 					ballNew.setColor(myRed); 
+					ballNew.infect();
+				}
 				else
 		        	ballNew.setColor(myGreen); 
 
@@ -127,9 +133,28 @@ public class SimpleBalls {
                         getParent().repaint();
                     }
                 });
-
-                    getParent().getBalls().get(random(AGENT_COUNT-1)).setColor(new Color(0,random(255),random(255))); 
-
+				infectedCount = 0;
+				for (Ball ball : getParent().getBalls()) {
+					if (ball.isInfected())
+						infectedCount += 1;
+				}
+				if (infectedCount == AGENT_COUNT){
+					long endTime   = System.currentTimeMillis();
+					long totalTime = endTime - startTime;
+					System.out.println("Time it took to infect every one: "+totalTime);
+					System.out.println(failed + " interactions failed");
+					break;
+				}
+				else {
+// not every time they connect they can infect
+					Ball b = getParent().getBalls().get(random(AGENT_COUNT-1));
+                    b.setColor(myRed); 
+					if (b.isInfected())
+						failed += 1;
+					b.infect();
+				}
+				rounds += 1;
+				System.out.println("This is round: "+ rounds + ", "+ infectedCount + " agents are infected now");
                 // Some small delay...
                 try {
                     Thread.sleep(100);
@@ -150,12 +175,17 @@ public class SimpleBalls {
         private Color color;
         private Point location;
         private Dimension size;
+		private boolean infected;
 
         public Ball(Color color) {
 
             setColor(color);
-            size = new Dimension(30, 30);
+            size = new Dimension(10, 10);
 
+        }
+
+        public void infect() {
+            this.infected = this.infected || true;
         }
 
         public Dimension getSize() {
@@ -178,6 +208,9 @@ public class SimpleBalls {
             return location;
         }
 
+        public boolean isInfected() {
+            return this.infected;
+        }
 
         protected void paint(Graphics2D g2d) {
 
