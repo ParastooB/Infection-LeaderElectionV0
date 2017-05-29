@@ -2,18 +2,20 @@ import java.util.List;
 import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
-public class Ball {
+public class Ball{
 
 	private Color color;
 	private Point location;
 	private Dimension size;
 	private boolean infected;
 	private boolean busy = false;
+	private int myID;
 
-	public Ball(Color color) {
+	public Ball(Color color, int i) {
 
 	    setColor(color);
 	    size = new Dimension(10, 10);
+	    myID = i;
 
 	}
 
@@ -52,6 +54,10 @@ public class Ball {
 
 	public Point getLocation() {
 	    return location;
+	}
+
+	public int getID() {
+	    return myID;
 	}
 
 	public boolean isInfected() {

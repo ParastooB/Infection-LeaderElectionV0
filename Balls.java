@@ -5,10 +5,15 @@ import java.awt.*;
 
 public class Balls extends JPanel {
 
-	public static final int AGENT_COUNT = 20;
+	public static final int AGENT_COUNT = 300;
 	public static final int FrameSize = 1024;
 	public Color myGreen = new Color(0,200,0);
 	private List<Ball> ballsUp;
+	public int infectedCount = 0;
+	public long startTime = System.currentTimeMillis();
+	public int rounds = 0;
+	public int failed = 0;
+	public boolean locked;
 
 	public Balls() {
 	    ballsUp = new ArrayList<Ball>(AGENT_COUNT);
@@ -21,12 +26,14 @@ public class Balls extends JPanel {
 	    for (int index = 0; index < AGENT_COUNT ; index++) {
 
 				// set the colour 
-				Ball ballNew = new Ball(new Color(5,80,120));
+				Ball ballNew = new Ball(new Color(5,80,120),index);
 				if (index == infected){
 					ballNew.infect();
+					System.out.println("Agent " + index + " is initially infected");
 				}
-				else
-				ballNew.setColor(myGreen); 
+				else {
+					ballNew.setColor(myGreen); 
+				}
 
 			// set the starting position...
 				double t = 2 * Math.PI * index / AGENT_COUNT;

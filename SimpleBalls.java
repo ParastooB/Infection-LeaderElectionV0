@@ -31,7 +31,10 @@ public class SimpleBalls {
                 frame.add(balls);
                 frame.setSize(FrameSize, FrameSize);
                 frame.setVisible(true);
-        		new Thread(new BounceEngine(balls)).start();
+        		//new Thread(new BounceEngine(balls,new Ball(new Color(5,80,120),2))).start();
+                for (Ball ball : balls.getBalls()) {
+                    new Thread(new BounceEngine(balls,ball)).start();
+                }
 
             }
         });

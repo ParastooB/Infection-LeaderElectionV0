@@ -5,15 +5,14 @@ import java.awt.*;
 
 public class BounceEngine implements Runnable {
 
-	public int infectedCount = 0;
-	public long startTime = System.currentTimeMillis();
-	public int rounds = 0;
-	public int failed = 0;
 
 	private Balls parent;
+	private Ball singleBall;
+	private int iCount = 0;
 
-	public BounceEngine(Balls parent) {
+	public BounceEngine(Balls parent, Ball singleBall) {
 	    this.parent = parent;
+	    this.singleBall = singleBall;
 	}
 
 	@Override
@@ -33,35 +32,50 @@ public class BounceEngine implements Runnable {
 			});
 
 			// DANGER : infectedCount is global
-			infectedCount = 0;
+			iCount = 0;
 			for (Ball ball : getParent().getBalls()) {
 				if (ball.isInfected())
-					infectedCount += 1;
+					iCount += 1;
 			}
-			// if (infectedCount == parent.AGENT_COUNT){
-			if (rounds == 4*parent.AGENT_COUNT){
+			if (iCount == parent.AGENT_COUNT){
+			//if (parent.rounds == 4*parent.AGENT_COUNT){
 				long endTime   = System.currentTimeMillis();
-				long totalTime = endTime - startTime;
-				System.out.println("Time it took to infect every one: "+totalTime);
+				long totalTime = endTime - parent.startTime;
+				System.out.println("Time done: "+totalTime);
 				// System.out.println(failed + " interactions failed");
 				break;
 			}
 			else {
 			// not every time they connect they can infect
 				Ball b = getParent().getBalls().get(parent.random(parent.AGENT_COUNT-1));
-			// DANGER : fail is global
-				if (!b.isEngaged()){
+				System.out.println("Agent " + singleBall.getID() + " attemping to connect to agent "+ b.getID());
+			// DANGER : failed is global
+				if (!b.isEngaged() && (b.getID() != singleBall.getID()) ){
 					b.engage();
-				  	if (b.isInfected())
-						failed += 1;
-					b.infect();
+				  	if (b.isInfected() && !singleBall.isInfected()){
+						singleBall.infect();
+						System.out.println("	Agent " + singleBall.getID() + " got infected by agent "+ b.getID());
+				  	}
+					else if (singleBall.isInfected() && !b.isInfected()){
+						b.infect();
+						System.out.println("	Agent " + singleBall.getID() + " infected agent "+ b.getID());
+					}
+					else 
+						System.out.println("	This interaction didn't change state of the agents");
 					b.disengage();
 				}
+				else
+					System.out.println("	Connection failed!");
 			}
 			
-			// DANGER: rounds is GLOBAL		
-			rounds += 1;
-			System.out.println("This is round: "+ rounds + ", "+ infectedCount + " agents are infected now");
+			// DANGER: rounds is GLOBAL
+			// LOCK
+			if (! parent.locked ){	
+				parent.locked = true;	
+				parent.rounds += 1;
+				parent.locked = false;
+			}
+			System.out.println("	This is round: "+ parent.rounds );
 			// Some small delay...
 			try {
 			    Thread.sleep(100);
