@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class Balls extends JPanel {
 
-	public static final int AGENT_COUNT = 500;
+	public static final int AGENT_COUNT = 50;
 	public static final int FrameSize = 1024;
 	public Color myGreen = new Color(0,200,0);
 	private List<Ball> ballsUp;

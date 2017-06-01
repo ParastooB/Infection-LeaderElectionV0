@@ -7,7 +7,6 @@ import java.awt.*;
 
 public class SimpleBalls {
 
-	// Agent count
 	public static final int FrameSize = 1024;
 
     public static void main(String[] args) {
