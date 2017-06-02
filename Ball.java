@@ -10,12 +10,14 @@ public class Ball{
 	private boolean infected;
 	private boolean busy = false;
 	private int myID;
+	private int LeaderID;
 
 	public Ball(Color color, int i) {
 
 	    setColor(color);
 	    size = new Dimension(10, 10);
-	    myID = i;
+	    this.myID = i;
+	    this.LeaderID = myID;
 
 	}
 
@@ -62,6 +64,10 @@ public class Ball{
 
 	public boolean isInfected() {
 	    return this.infected;
+	}
+
+	public void updateLeader(int NewLeader) {
+	    this.LeaderID = Math.max(NewLeader, this.LeaderID);
 	}
 
 	protected void paint(Graphics2D g2d) {
