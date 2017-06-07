@@ -47,22 +47,31 @@ public class BounceEngine implements Runnable {
 			}
 			else {
 			// not every time they connect they can infect
+				try {
+				    Thread.sleep(500);
+				} catch (InterruptedException ex) {
+				}
+				
 				Ball b = getParent().getBalls().get(parent.random(parent.AGENT_COUNT-1));
 				System.out.println("Agent " + singleBall.getID() + " attemping to connect to agent "+ b.getID());
 			// DANGER : failed is global
-				if (!b.isEngaged() && (b.getID() != singleBall.getID()) ){
-					b.engage();
+				if (!b.isEngaged() && !singleBall.isEngaged() && (b.getID() != singleBall.getID()) ){
+					b.engage(singleBall);
+					singleBall.engage(b);
 				  	if (b.isInfected() && !singleBall.isInfected()){
 						singleBall.infect();
+						b.Infected(singleBall);
 						System.out.println("	Agent " + singleBall.getID() + " got infected by agent "+ b.getID());
 				  	}
 					else if (singleBall.isInfected() && !b.isInfected()){
 						b.infect();
+						singleBall.Infected(b);
 						System.out.println("	Agent " + singleBall.getID() + " infected agent "+ b.getID());
 					}
 					else 
 						System.out.println("	This interaction didn't change state of the agents");
 					b.disengage();
+					singleBall.disengage();
 				}
 				else
 					System.out.println("	Connection failed!");
@@ -78,7 +87,7 @@ public class BounceEngine implements Runnable {
 			System.out.println("	This is round: "+ parent.rounds );
 			// Some small delay...
 			try {
-			    Thread.sleep(1000);
+			    Thread.sleep(5000);
 			} catch (InterruptedException ex) {
 			}
 

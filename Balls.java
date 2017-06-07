@@ -5,8 +5,8 @@ import java.awt.*;
 
 public class Balls extends JPanel {
 
-	public static final int AGENT_COUNT = 50;
-	public static final int FrameSize = 1024;
+	public static final int AGENT_COUNT = 5;
+	public static final int FrameSize = 512;
 	public Color myGreen = new Color(0,200,0);
 	private List<Ball> ballsUp;
 	public int infectedCount = 0;
@@ -14,11 +14,12 @@ public class Balls extends JPanel {
 	public int rounds = 0;
 	public int failed = 0;
 	public boolean locked;
+	public boolean connection = false;
 
 	public Balls() {
 	    ballsUp = new ArrayList<Ball>(AGENT_COUNT);
 
-			int infected = random(AGENT_COUNT);
+			int infected = random(AGENT_COUNT-1);
 			int m = Math.min(FrameSize/2, FrameSize/2);
 			int r = 4 * m / 5;
 			int r2 = Math.abs(m - r) / 2;
@@ -29,10 +30,12 @@ public class Balls extends JPanel {
 				Ball ballNew = new Ball(new Color(5,80,120),index);
 				if (index == infected){
 					ballNew.infect();
+					ballNew.setAgentCount(AGENT_COUNT);
 					System.out.println("Agent " + index + " is initially infected");
 				}
 				else {
 					ballNew.setColor(myGreen); 
+					ballNew.setAgentCount(AGENT_COUNT);
 				}
 
 			// set the starting position...
@@ -61,6 +64,11 @@ public class Balls extends JPanel {
 	    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	    for (Ball ball : ballsUp) {
 		ball.paint(g2d);
+	        Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
+	        g2d.setStroke(dashed);
+	        g2d.setPaint(Color.blue);
+	        for (Ball iBall : ball.interactions())
+	        	g2d.drawLine(ball.getLocation().x, ball.getLocation().y, iBall.getLocation().x, iBall.getLocation().y);
 	    }
 	    g2d.dispose();
 	}
