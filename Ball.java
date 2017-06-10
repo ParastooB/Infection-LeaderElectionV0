@@ -17,7 +17,7 @@ public class Ball{
 	public Ball(Color color, int i) {
 
 	    setColor(color);
-	    size = new Dimension(30, 30);
+	    size = new Dimension(25, 25);
 	    this.myID = i;
 	    this.LeaderID = myID;
 
@@ -87,6 +87,12 @@ public class Ball{
 		a = (ArrayList<Ball>) this.interactedWith;
 		return a;
 	}
+	
+	public ArrayList<Ball> SuccesfulInteractions(){
+		ArrayList<Ball> a = new ArrayList<Ball>(agent_count);
+		a = (ArrayList<Ball>) this.infectedThem;
+		return a;
+	}
 
 	protected void paint(Graphics2D g2d) {
 
@@ -94,7 +100,7 @@ public class Ball{
 	    if (p != null) {
 		g2d.setColor(getColor());
 		Dimension size = getSize();
-		g2d.fillOval(p.x, p.y, size.width, size.height);
+		g2d.fillOval(p.x-size.width/2, p.y-size.height/2, size.width, size.height);
 	    }
 
 	}

@@ -5,16 +5,18 @@ import java.awt.*;
 
 public class Balls extends JPanel {
 
-	public static final int AGENT_COUNT = 5;
-	public static final int FrameSize = 512;
-	public Color myGreen = new Color(0,200,0);
+	public static final int AGENT_COUNT = 100;
+	public static final int FrameSize = 1024;
+	public Color myGreen = new Color(0,192,0);
 	private List<Ball> ballsUp;
-	public int infectedCount = 0;
+	private int infectedCount = 0;
 	public long startTime = System.currentTimeMillis();
-	public int rounds = 0;
-	public int failed = 0;
-	public boolean locked;
-	public boolean connection = false;
+	private int rounds = 0;
+	private int failed = 0;
+	private int repeated = 0;
+	private boolean locked;
+	private boolean connection = false;
+	private boolean electionCompleted = false;
 
 	public Balls() {
 	    ballsUp = new ArrayList<Ball>(AGENT_COUNT);
@@ -32,6 +34,7 @@ public class Balls extends JPanel {
 					ballNew.infect();
 					ballNew.setAgentCount(AGENT_COUNT);
 					System.out.println("Agent " + index + " is initially infected");
+					this.infection();
 				}
 				else {
 					ballNew.setColor(myGreen); 
@@ -58,23 +61,68 @@ public class Balls extends JPanel {
 	}
 
 	@Override
-	protected void paintComponent(Graphics g) {
+	protected synchronized void paintComponent(Graphics g) {
 	    super.paintComponent(g);
 	    Graphics2D g2d = (Graphics2D) g.create();
 	    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	    g2d.drawString("Rounds: "+String.valueOf(this.rounds), 100, 100);
+	    g2d.drawString("Failed: "+String.valueOf(this.failed+this.repeated), 100, 120);
+	    g2d.drawString("Infected: "+String.valueOf(this.infectionCount()), 100, 140);
 	    for (Ball ball : ballsUp) {
 		ball.paint(g2d);
-	        Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
-	        g2d.setStroke(dashed);
-	        g2d.setPaint(Color.blue);
-	        for (Ball iBall : ball.interactions())
-	        	g2d.drawLine(ball.getLocation().x, ball.getLocation().y, iBall.getLocation().x, iBall.getLocation().y);
+	        for (Ball iBall : ball.interactions()) {
+	        	if (ball.SuccesfulInteractions().contains(iBall)){
+	        		Stroke dashed = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{1}, 0);
+	        		g2d.setStroke(dashed);
+	        		g2d.setPaint(new Color(0,192,0));
+	        		g2d.drawLine(ball.getLocation().x, ball.getLocation().y, iBall.getLocation().x, iBall.getLocation().y);
+	        	}
+	        	else {
+	        		Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
+	        		g2d.setStroke(dashed);
+	        		g2d.setPaint(new Color(192,192,192));
+	        		g2d.drawLine(ball.getLocation().x, ball.getLocation().y, iBall.getLocation().x, iBall.getLocation().y);
+	        	}
+	    	}
 	    }
 	    g2d.dispose();
 	}
 
+	public synchronized void infection(){
+		this.infectedCount ++;
+	}
+	
+	public synchronized void rounds(){
+		this.rounds ++;
+	}
+	
+	public synchronized void failed(int errorCode){
+		if (errorCode == 1)
+			this.repeated ++;
+		else if (errorCode == 2)
+			this.failed ++;
+	}
+	
+	public int infectionCount(){
+		int a = this.infectedCount;
+		return a;
+	}
+	
+	public int roundsCount(){
+		int a = this.rounds;
+		return a;
+	}
+	
 	public List<Ball> getBalls() {
 	    return ballsUp;
+	}
+	
+	public boolean isElectionComplete() {
+	    return this.electionCompleted;
+	}
+	
+	public void electionIsComplete() {
+	    this.electionCompleted = true;
 	}
 
 	public static int random(int maxRange) {

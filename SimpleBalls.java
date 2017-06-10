@@ -1,13 +1,14 @@
 /*Soucre : https://stackoverflow.com/questions/13022754/java-bouncing-ball*/
 
 import java.util.List;
+import java.util.Set;
 import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
 
 public class SimpleBalls {
 
-	public static final int FrameSize = 512;
+	public static final int FrameSize = 1024;
 
     public static void main(String[] args) {
         new SimpleBalls();
@@ -36,6 +37,7 @@ public class SimpleBalls {
                 for (Ball ball : balls.getBalls()) {
                     new Thread(new BounceEngine(balls,ball)).start();
                 }
+//                Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
 
             }
         });
