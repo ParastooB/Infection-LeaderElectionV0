@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.*;
-public class Ball{
+public class Agent{
 
 	private Color color;
 	private Point location;
@@ -11,10 +11,10 @@ public class Ball{
 	private int myID;
 	private int LeaderID;
 	private int agent_count;
-	private List<Ball> interactedWith; 
-	private List<Ball> infectedThem; 
+	private List<Agent> interactedWith; 
+	private List<Agent> infectedThem; 
 
-	public Ball(Color color, int i) {
+	public Agent(Color color, int i) {
 
 	    setColor(color);
 	    size = new Dimension(25, 25);
@@ -25,15 +25,15 @@ public class Ball{
 
 	public void setAgentCount(int count){
 		this.agent_count = count;
-		this.interactedWith = new ArrayList<Ball>(agent_count);
-		this.infectedThem = new ArrayList<Ball>(agent_count);
+		this.interactedWith = new ArrayList<Agent>(agent_count);
+		this.infectedThem = new ArrayList<Agent>(agent_count);
 	}
 	public void infect() {
 	    this.infected = this.infected || true;
 	    this.color = new Color(200,0,0);
 	}
 
-	public void engage(Ball withID) {
+	public void engage(Agent withID) {
 		this.interactedWith.add(withID);
 	    this.busy = true;
 	}
@@ -78,19 +78,19 @@ public class Ball{
 	    this.LeaderID = Math.max(NewLeader, this.LeaderID);
 	}
 	
-	public void Infected(Ball a) {
+	public void Infected(Agent a) {
 	    this.infectedThem.add(a);
 	}
 	
-	public ArrayList<Ball> interactions(){
-		ArrayList<Ball> a = new ArrayList<Ball>(agent_count);
-		a = (ArrayList<Ball>) this.interactedWith;
+	public ArrayList<Agent> interactions(){
+		ArrayList<Agent> a = new ArrayList<Agent>(agent_count);
+		a = (ArrayList<Agent>) this.interactedWith;
 		return a;
 	}
 	
-	public ArrayList<Ball> SuccesfulInteractions(){
-		ArrayList<Ball> a = new ArrayList<Ball>(agent_count);
-		a = (ArrayList<Ball>) this.infectedThem;
+	public ArrayList<Agent> SuccesfulInteractions(){
+		ArrayList<Agent> a = new ArrayList<Agent>(agent_count);
+		a = (ArrayList<Agent>) this.infectedThem;
 		return a;
 	}
 

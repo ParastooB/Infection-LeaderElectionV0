@@ -3,12 +3,12 @@ import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
 
-public class Balls extends JPanel {
+public class Agents extends JPanel {
 
 	public static final int AGENT_COUNT = 100;
 	public static final int FrameSize = 1024;
 	public Color myGreen = new Color(0,192,0);
-	private List<Ball> ballsUp;
+	private List<Agent> agentsOnNode;
 	private int infectedCount = 0;
 	public long startTime = System.currentTimeMillis();
 	private int rounds = 0;
@@ -18,8 +18,8 @@ public class Balls extends JPanel {
 	private boolean connection = false;
 	private boolean electionCompleted = false;
 
-	public Balls() {
-	    ballsUp = new ArrayList<Ball>(AGENT_COUNT);
+	public Agents() {
+	    agentsOnNode = new ArrayList<Agent>(AGENT_COUNT);
 
 			int infected = random(AGENT_COUNT-1);
 			int m = Math.min(FrameSize/2, FrameSize/2);
@@ -29,16 +29,16 @@ public class Balls extends JPanel {
 	    for (int index = 0; index < AGENT_COUNT ; index++) {
 
 				// set the colour 
-				Ball ballNew = new Ball(new Color(5,80,120),index);
+				Agent agentNew = new Agent(new Color(5,80,120),index);
 				if (index == infected){
-					ballNew.infect();
-					ballNew.setAgentCount(AGENT_COUNT);
+					agentNew.infect();
+					agentNew.setAgentCount(AGENT_COUNT);
 					System.out.println("Agent " + index + " is initially infected");
 					this.infection();
 				}
 				else {
-					ballNew.setColor(myGreen); 
-					ballNew.setAgentCount(AGENT_COUNT);
+					agentNew.setColor(myGreen); 
+					agentNew.setAgentCount(AGENT_COUNT);
 				}
 
 			// set the starting position...
@@ -46,7 +46,7 @@ public class Balls extends JPanel {
 				int x = (int) Math.round(FrameSize/2 + r * Math.cos(t));
 				int y = (int) Math.round(FrameSize/2 + r * Math.sin(t));
 
-			Dimension size = ballNew.getSize();
+			Dimension size = agentNew.getSize();
 
 			if (x + size.width > FrameSize) {
 				x = FrameSize - size.width;
@@ -55,8 +55,8 @@ public class Balls extends JPanel {
 				y = FrameSize - size.height;
 			}
 
-			ballNew.setLocation(new Point(x, y));
-			ballsUp.add(ballNew);
+			agentNew.setLocation(new Point(x, y));
+			agentsOnNode.add(agentNew);
 	    }
 	}
 
@@ -68,20 +68,20 @@ public class Balls extends JPanel {
 	    g2d.drawString("Rounds: "+String.valueOf(this.rounds), 100, 100);
 	    g2d.drawString("Failed: "+String.valueOf(this.failed+this.repeated), 100, 120);
 	    g2d.drawString("Infected: "+String.valueOf(this.infectionCount()), 100, 140);
-	    for (Ball ball : ballsUp) {
-		ball.paint(g2d);
-	        for (Ball iBall : ball.interactions()) {
-	        	if (ball.SuccesfulInteractions().contains(iBall)){
+	    for (Agent agent : agentsOnNode) {
+		agent.paint(g2d);
+	        for (Agent iA : agent.interactions()) {
+	        	if (agent.SuccesfulInteractions().contains(iA)){
 	        		Stroke dashed = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{1}, 0);
 	        		g2d.setStroke(dashed);
 	        		g2d.setPaint(new Color(0,192,0));
-	        		g2d.drawLine(ball.getLocation().x, ball.getLocation().y, iBall.getLocation().x, iBall.getLocation().y);
+	        		g2d.drawLine(agent.getLocation().x, agent.getLocation().y, iA.getLocation().x, iA.getLocation().y);
 	        	}
 	        	else {
 	        		Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
 	        		g2d.setStroke(dashed);
 	        		g2d.setPaint(new Color(192,192,192));
-	        		g2d.drawLine(ball.getLocation().x, ball.getLocation().y, iBall.getLocation().x, iBall.getLocation().y);
+	        		g2d.drawLine(agent.getLocation().x, agent.getLocation().y, iA.getLocation().x, iA.getLocation().y);
 	        	}
 	    	}
 	    }
@@ -113,8 +113,8 @@ public class Balls extends JPanel {
 		return a;
 	}
 	
-	public List<Ball> getBalls() {
-	    return ballsUp;
+	public List<Agent> getAgents() {
+	    return agentsOnNode;
 	}
 	
 	public boolean isElectionComplete() {

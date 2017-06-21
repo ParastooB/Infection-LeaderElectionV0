@@ -6,15 +6,15 @@ import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
 
-public class SimpleBalls {
+public class SimpleInfection {
 
 	public static final int FrameSize = 1024;
 
     public static void main(String[] args) {
-        new SimpleBalls();
+        new SimpleInfection();
     }
 
-    public SimpleBalls() {
+    public SimpleInfection() {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -29,15 +29,17 @@ public class SimpleBalls {
                 JFrame frame = new JFrame("Spot");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setLayout(new BorderLayout());
-                Balls balls = new Balls();
-                frame.add(balls);
+                Agents agents = new Agents();
+                frame.add(agents);
                 frame.setSize(FrameSize, FrameSize);
                 frame.setVisible(true);
-        		//new Thread(new BounceEngine(balls,new Ball(new Color(5,80,120),2))).start();
-                for (Ball ball : balls.getBalls()) {
-                    new Thread(new BounceEngine(balls,ball)).start();
+                
+                ThreadGroup tg = new ThreadGroup ("1");
+                for (Agent agent : agents.getAgents()) {
+                	InfectionEngine gb = new InfectionEngine(agents,agent);
+                    new Thread(tg, gb, "Thread for " + agent.getID()).start();
                 }
-//                Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+                tg.list();
 
             }
         });
