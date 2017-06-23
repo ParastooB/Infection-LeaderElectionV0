@@ -24,12 +24,11 @@ public class Agents extends JPanel {
 			int infected = random(AGENT_COUNT-1);
 			int m = Math.min(FrameSize/2, FrameSize/2);
 			int r = 4 * m / 5;
-			int r2 = Math.abs(m - r) / 2;
 
 	    for (int index = 0; index < AGENT_COUNT ; index++) {
 
 				// set the colour 
-				Agent agentNew = new Agent(new Color(5,80,120),index);
+				Agent agentNew = new Agent(new Color(5,80,120),random(1000));
 				if (index == infected){
 					agentNew.infect();
 					agentNew.setAgentCount(AGENT_COUNT);
@@ -56,6 +55,12 @@ public class Agents extends JPanel {
 			}
 
 			agentNew.setLocation(new Point(x, y));
+			
+			int s = 19 * m / 20;
+			int xi = (int) Math.round(FrameSize/2 + s * Math.cos(t) - 1);
+			int yi = (int) Math.round(FrameSize/2 + s * Math.sin(t) - 1);
+			
+			agentNew.setInfoLocation(new Point(xi,yi));
 			agentsOnNode.add(agentNew);
 	    }
 	}

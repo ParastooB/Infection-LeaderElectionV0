@@ -1,12 +1,14 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 public class Agent{
 
 	private Color color;
 	private Point location;
+	private Point Infolocation;
 	private Dimension size;
-	private boolean infected;
+	private boolean infected = false;
 	private boolean busy = false;
 	private int myID;
 	private int LeaderID;
@@ -57,6 +59,10 @@ public class Agent{
 	public void setLocation(Point location) {
 	    this.location = location;
 	}
+	
+	public void setInfoLocation(Point location) {
+	    this.Infolocation = location;
+	}
 
 	public Color getColor() {
 	    return color;
@@ -101,6 +107,11 @@ public class Agent{
 		g2d.setColor(getColor());
 		Dimension size = getSize();
 		g2d.fillOval(p.x-size.width/2, p.y-size.height/2, size.width, size.height);
+		g2d.setColor(Color.BLACK);
+		Point q = this.Infolocation;
+		//g2d.setTransform(AffineTransform.getRotateInstance(Math.toRadians(45), q.x, p.y));
+		//g2d.drawString("" + this.myID ,q.x,  q.y);
+		//g2d.drawString("" + this.LeaderID ,q.x-10,  q.y-10);
 	    }
 
 	}

@@ -39,7 +39,7 @@ public class SimpleInfection {
                 	InfectionEngine gb = new InfectionEngine(agents,agent);
                     new Thread(tg, gb, "Thread for " + agent.getID()).start();
                 }
-                tg.list();
+                //tg.list();
 
             }
         });

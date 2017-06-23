@@ -45,6 +45,7 @@ public class InfectionEngine implements Runnable {
 //				System.out.println("Time done: "+totalTime + " they finished at round " + parent.roundsCount());
 				System.out.println("Thread "+iAgent.getID() +" finished at round " + parent.roundsCount() + ", threads remaining: " + Thread.activeCount());
 				parent.electionIsComplete();
+//				killThreads();
 //				break;
 			}
 			else {
@@ -72,6 +73,8 @@ public class InfectionEngine implements Runnable {
 						System.out.println("	This interaction didn't change state of the agents");
 						parent.failed(1);
 					}
+/*				  	iAgent.updateLeader(b.getID());
+					b.updateLeader(iAgent.getID());*/
 					b.disengage();
 					iAgent.disengage();
 				}
@@ -97,5 +100,10 @@ public class InfectionEngine implements Runnable {
 
 	public Agents getParent() {
 	    return parent;
+	}
+	
+	public synchronized void killThreads(){
+		if (! Thread.currentThread().getThreadGroup().isDestroyed())
+			Thread.currentThread().getThreadGroup().destroy();
 	}
 }
