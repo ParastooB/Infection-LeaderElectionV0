@@ -5,10 +5,11 @@ import java.awt.*;
 
 public class Agents extends JPanel {
 
-	public static final int AGENT_COUNT = 100;
-	public static final int FrameSize = 1024;
+	public static final int AGENT_COUNT = 10;
+	public static final int FrameSize = 800;
 	public Color myGreen = new Color(0,192,0);
 	private List<Agent> agentsOnNode;
+	private List<Integer> agentIDs;
 	private int infectedCount = 0;
 	public long startTime = System.currentTimeMillis();
 	private int rounds = 0;
@@ -17,18 +18,23 @@ public class Agents extends JPanel {
 	private boolean locked;
 	private boolean connection = false;
 	private boolean electionCompleted = false;
+	private int tempID;
 
 	public Agents() {
 	    agentsOnNode = new ArrayList<Agent>(AGENT_COUNT);
 
-			int infected = random(AGENT_COUNT-1);
-			int m = Math.min(FrameSize/2, FrameSize/2);
-			int r = 4 * m / 5;
+		int infected = random(AGENT_COUNT-1);
+		int m = Math.min(FrameSize/2, FrameSize/2);
+		int r = 4 * m / 5;
+		agentIDs = new ArrayList<Integer>(AGENT_COUNT);
 
 	    for (int index = 0; index < AGENT_COUNT ; index++) {
 
 				// set the colour 
-				Agent agentNew = new Agent(new Color(5,80,120),random(1000));
+	    		tempID = random(1000);
+	    		while(agentIDs.contains(tempID))
+	    			tempID = random(1000);
+				Agent agentNew = new Agent(new Color(5,80,120),tempID);
 				if (index == infected){
 					agentNew.infect();
 					agentNew.setAgentCount(AGENT_COUNT);
@@ -41,9 +47,9 @@ public class Agents extends JPanel {
 				}
 
 			// set the starting position...
-				double t = 2 * Math.PI * index / AGENT_COUNT;
-				int x = (int) Math.round(FrameSize/2 + r * Math.cos(t));
-				int y = (int) Math.round(FrameSize/2 + r * Math.sin(t));
+			double t = 2 * Math.PI * index / AGENT_COUNT;
+			int x = (int) Math.round(FrameSize/2 + r * Math.cos(t));
+			int y = (int) Math.round(FrameSize/2 + r * Math.sin(t));
 
 			Dimension size = agentNew.getSize();
 
@@ -62,6 +68,7 @@ public class Agents extends JPanel {
 			
 			agentNew.setInfoLocation(new Point(xi,yi));
 			agentsOnNode.add(agentNew);
+			agentIDs.add(tempID);
 	    }
 	}
 

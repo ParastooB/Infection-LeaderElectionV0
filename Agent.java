@@ -2,6 +2,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.io.PrintWriter;
+import java.io.*;
 public class Agent{
 
 	private Color color;
@@ -14,7 +16,9 @@ public class Agent{
 	private int LeaderID;
 	private int agent_count;
 	private List<Agent> interactedWith; 
-	private List<Agent> infectedThem; 
+	private List<Agent> infectedThem;
+	PrintWriter writer = null; 
+	String fileName = null;
 
 	public Agent(Color color, int i) {
 
@@ -22,6 +26,22 @@ public class Agent{
 	    size = new Dimension(25, 25);
 	    this.myID = i;
 	    this.LeaderID = myID;
+	    fileName = "./agents/a_" + this.myID + ".txt";
+        try{
+            writer = new PrintWriter(fileName, "UTF-8");
+        } catch (FileNotFoundException e) {
+            System.err.println("FileNotFoundException: " + e.getMessage());
+        } catch (SecurityException e) {
+            System.err.println("SecurityException: " + e.getMessage());
+        } catch (UnsupportedEncodingException e) {
+            System.err.println("UnsupportedEncodingException: " + e.getMessage());
+	    }
+        try{
+            writer.println(color);
+        } catch (NullPointerException  e) {
+            System.err.println("NullPointerException: " + e.getMessage());
+	    }
+	    writer.close();
 
 	}
 
@@ -33,6 +53,21 @@ public class Agent{
 	public void infect() {
 	    this.infected = this.infected || true;
 	    this.color = new Color(200,0,0);
+	    try{
+            writer = new PrintWriter(fileName, "UTF-8");
+        } catch (FileNotFoundException e) {
+            System.err.println("FileNotFoundException: " + e.getMessage());
+        } catch (SecurityException e) {
+            System.err.println("SecurityException: " + e.getMessage());
+        } catch (UnsupportedEncodingException e) {
+            System.err.println("UnsupportedEncodingException: " + e.getMessage());
+	    }
+	    try{
+            writer.println(this.color);
+        } catch (NullPointerException  e) {
+            System.err.println("NullPointerException: " + e.getMessage());
+	    }
+	    writer.close();
 	}
 
 	public void engage(Agent withID) {
