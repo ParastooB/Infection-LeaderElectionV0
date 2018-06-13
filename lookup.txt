@@ -1,0 +1,6 @@
+#lookup table
+#AgentID			MachineID
+4			7f4b579defc14217b47dfda8812ae437
+3			692ff96d900f48fa885e7feaca9fd80b
+2			ce1ba65c19014940a6fe6b9e4779a587
+1			f2f676244497454f97e78b38010c4acd

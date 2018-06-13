@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class Agents extends JPanel {
 
-	public static final int AGENT_COUNT = 10;
+	public static final int AGENT_COUNT = 4;
 	public static final int FrameSize = 800;
 	public Color myGreen = new Color(0,192,0);
 	private List<Agent> agentsOnNode;
@@ -31,11 +31,16 @@ public class Agents extends JPanel {
 	    for (int index = 0; index < AGENT_COUNT ; index++) {
 
 				// set the colour 
-	    		tempID = random(1000);
+/*	    		tempID = random(1000);
 	    		while(agentIDs.contains(tempID))
 	    			tempID = random(1000);
-				Agent agentNew = new Agent(new Color(5,80,120),tempID);
-				if (index == infected){
+				Agent agentNew = new Agent(new Color(5,80,120),tempID);*/
+
+// only for test, to be deleted later:
+				Agent agentNew = new Agent(myGreen,index+1);
+//------------------------------------
+//				if (index == infected){
+				if (index == 0){ //forcing agent 1 to be infected
 					agentNew.infect();
 					agentNew.setAgentCount(AGENT_COUNT);
 					System.out.println("Agent " + index + " is initially infected");

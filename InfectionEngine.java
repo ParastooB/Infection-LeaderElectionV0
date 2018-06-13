@@ -21,12 +21,12 @@ public class InfectionEngine implements Runnable {
 		int height = getParent().getHeight();
 
 		while (getParent().isVisible() && !parent.isElectionComplete()) {
-				// Some small delay...
-				// When they finish depends on how much they sleep
-				// try {
-				//     Thread.sleep(1000);
-				// } catch (InterruptedException ex) {
-				// }
+				 // Some small delay...
+				 // When they finish depends on how much they sleep
+				 try {
+				     Thread.sleep(10000);
+				 } catch (InterruptedException ex) {
+				 }
 
 			// Repaint the agents pen...
 			SwingUtilities.invokeLater(new Runnable() {
@@ -88,7 +88,7 @@ public class InfectionEngine implements Runnable {
 				// Some small delay...
 				// When they finish depends on how much they sleep
 				try {
-				    Thread.sleep(1000);
+				    Thread.sleep(5000);
 				} catch (InterruptedException ex) {
 				}
 			}

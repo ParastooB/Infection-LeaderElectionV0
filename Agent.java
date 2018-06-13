@@ -37,7 +37,10 @@ public class Agent{
             System.err.println("UnsupportedEncodingException: " + e.getMessage());
 	    }
         try{
-            writer.println(color);
+			if (color.equals(new Color(0,192,0)))
+            	writer.println("green");
+			if (color.equals(new Color(200,0,0)))
+            	writer.println("red");
         } catch (NullPointerException  e) {
             System.err.println("NullPointerException: " + e.getMessage());
 	    }
@@ -63,7 +66,10 @@ public class Agent{
             System.err.println("UnsupportedEncodingException: " + e.getMessage());
 	    }
 	    try{
-            writer.println(this.color);
+			if (color.equals(new Color(0,192,0)))
+            	writer.println("green");
+			if (color.equals(new Color(200,0,0)))
+            	writer.println("red");
         } catch (NullPointerException  e) {
             System.err.println("NullPointerException: " + e.getMessage());
 	    }
