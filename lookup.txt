@@ -1,6 +1,24 @@
-#lookup table
-#AgentID			MachineID
-4			7f4b579defc14217b47dfda8812ae437
-3			692ff96d900f48fa885e7feaca9fd80b
-2			ce1ba65c19014940a6fe6b9e4779a587
-1			f2f676244497454f97e78b38010c4acd
+ea31,1
+ea32,2
+ea33,3
+ea34,4
+ea35,5
+ea36,6
+ea37,7
+ea38,8
+ea17,9
+ea18,10
+ea19,11
+ea20,12
+ea21,13
+ea22,14
+ea23,15
+ea24,16
+ea01,17
+ea02,18
+ea03,19
+ea04,20
+ea05,21
+ea06,22
+ea07,23
+ea08,24

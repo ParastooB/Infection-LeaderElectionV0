@@ -5,9 +5,10 @@ import java.awt.*;
 
 public class InfectionEngine implements Runnable {
 
-
 	private Agents parent;
 	private Agent iAgent;
+	long startTime = System.currentTimeMillis();
+    long previousTime = System.currentTimeMillis();
 
 	public InfectionEngine(Agents parent, Agent iAgent) {
 	    this.parent = parent;
@@ -17,14 +18,16 @@ public class InfectionEngine implements Runnable {
 	@Override
 	public void run() {
 
+
 		int width = getParent().getWidth();
 		int height = getParent().getHeight();
 
 		while (getParent().isVisible() && !parent.isElectionComplete()) {
+
 				 // Some small delay...
 				 // When they finish depends on how much they sleep
-				 try {
-				     Thread.sleep(10000);
+				  try {
+				      Thread.sleep(3000);
 				 } catch (InterruptedException ex) {
 				 }
 
@@ -39,9 +42,9 @@ public class InfectionEngine implements Runnable {
 
 			// DANGER : infectedCount is global but synchronized
 			if (parent.infectionCount() == parent.AGENT_COUNT){
-//				long endTime   = System.currentTimeMillis();
-//				long totalTime = endTime - parent.startTime;
-//				System.out.println("Time done: "+totalTime + " they finished at round " + parent.roundsCount());
+				long endTime   = System.currentTimeMillis();
+				long totalTime = endTime - parent.startTime;
+				System.out.println("Time done: "+totalTime + " they finished at round " + parent.roundsCount());
 				System.out.println("Thread "+iAgent.getID() +" finished at round " + parent.roundsCount() + ", threads remaining: " + Thread.activeCount());
 				parent.electionIsComplete();
 //				killThreads();
@@ -83,14 +86,14 @@ public class InfectionEngine implements Runnable {
 				}
 				// LOCK
 				parent.rounds();
-				System.out.println("	This is round: "+ parent.roundsCount());
+				System.out.println("	This was round: "+ parent.roundsCount());
 				
 				// Some small delay...
 				// When they finish depends on how much they sleep
-				try {
-				    Thread.sleep(5000);
-				} catch (InterruptedException ex) {
-				}
+				// try {
+				//     Thread.sleep(5000);
+				// } catch (InterruptedException ex) {
+				// }
 			}
 
 		}

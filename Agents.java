@@ -2,10 +2,11 @@ import java.util.List;
 import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 
 public class Agents extends JPanel {
 
-	public static final int AGENT_COUNT = 4;
+	public static final int AGENT_COUNT = 24;
 	public static final int FrameSize = 800;
 	public Color myGreen = new Color(0,192,0);
 	private List<Agent> agentsOnNode;
@@ -19,6 +20,8 @@ public class Agents extends JPanel {
 	private boolean connection = false;
 	private boolean electionCompleted = false;
 	private int tempID;
+	private PrintWriter writer = null;
+
 
 	public Agents() {
 	    agentsOnNode = new ArrayList<Agent>(AGENT_COUNT);
@@ -27,6 +30,22 @@ public class Agents extends JPanel {
 		int m = Math.min(FrameSize/2, FrameSize/2);
 		int r = 4 * m / 5;
 		agentIDs = new ArrayList<Integer>(AGENT_COUNT);
+
+		try{
+		    writer = new PrintWriter("./output.txt", "UTF-8");
+		} catch (FileNotFoundException e) {
+		    System.err.println("FileNotFoundException: " + e.getMessage());
+		} catch (SecurityException e) {
+		    System.err.println("SecurityException: " + e.getMessage());
+		} catch (UnsupportedEncodingException e) {
+		    System.err.println("UnsupportedEncodingException: " + e.getMessage());
+		}
+
+		try{
+		    writer.println(startTime);
+		} catch (NullPointerException  e) {
+		    System.err.println("NullPointerException: " + e.getMessage());
+		}
 
 	    for (int index = 0; index < AGENT_COUNT ; index++) {
 
@@ -110,6 +129,11 @@ public class Agents extends JPanel {
 	}
 	
 	public synchronized void rounds(){
+	    try{
+	        writer.println(System.currentTimeMillis()-this.startTime + "			" + infectionCount()+"			" +roundsCount());
+	    } catch (NullPointerException  e) {
+	        System.err.println("NullPointerException: " + e.getMessage());
+	    }
 		this.rounds ++;
 	}
 	
@@ -140,6 +164,7 @@ public class Agents extends JPanel {
 	
 	public void electionIsComplete() {
 	    this.electionCompleted = true;
+	    this.writer.close();
 	}
 
 	public static int random(int maxRange) {
